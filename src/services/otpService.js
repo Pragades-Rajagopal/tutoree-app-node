@@ -122,12 +122,13 @@ const getOTP = (email) => {
     return new Promise((resolve, reject) => {
         const sql = `
             select * from otp 
-            where email = ${email}
+            where email = ?
             order by id desc 
             limit 1 
         `;
-        appDB.all(sql, [], (err, data) => {
+        appDB.all(sql, [email], (err, data) => {
             if (err) {
+                console.log(err);
                 reject('error while fetching OTP data');
             } else {
                 resolve(data);

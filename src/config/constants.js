@@ -103,5 +103,9 @@ module.exports = {
     courses: {
         success: 'Success',
         error: 'Something went wrong'
+    },
+    commonServerError: {
+        internal: 'Internal Server Error',
+        badRequest: 'Bad request'
     }
 }

@@ -13,7 +13,7 @@ module.exports = {
      * @returns {string} token
      */
     generateToken: (payload) => {
-        const accessToken = jwt.sign(payload, process.env.PLT_ACCESS_TOKEN, { algorithm: "HS256" });
+        const accessToken = jwt.sign(payload, process.env.APP_ACCESS_TOKEN, { algorithm: "HS256" });
         return accessToken;
     },
 
@@ -21,20 +21,19 @@ module.exports = {
     authenticateToken: (req, res, next) => {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
-        console.log(token);
-        if (typeof token === undefined || token === null) {
-            return {
+        if (typeof token === 'undefined' || token === null) {
+            return res.status(statusCode.unauthorized).json({
                 statusCode: statusCode.unauthorized,
                 message: authenticationMessage.tokenMissing
-            }
+            })
         }
         jwt.verify(token, process.env.APP_ACCESS_TOKEN, { algorithms: "HS256" }, (err, data) => {
             console.log(err);
             if (err) {
-                return {
+                return res.status(statusCode.forbidden).json({
                     statusCode: statusCode.forbidden,
                     message: authenticationMessage.invalidToken
-                }
+                });
             }
             req.user = data;
             next();

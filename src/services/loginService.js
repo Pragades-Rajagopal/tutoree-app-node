@@ -81,10 +81,10 @@ const getUserPassword = (email) => {
     return new Promise((resolve, reject) => {
         const sql = `
             select password from users 
-            where email = ${email}
+            where email = ?
             and _status = 1
         `;
-        appDB.all(sql, [], (err, data) => {
+        appDB.all(sql, [email], (err, data) => {
             if (err) {
                 reject('error at common/getUserPassword model')
             } else {
