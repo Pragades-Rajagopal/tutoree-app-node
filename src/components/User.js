@@ -259,7 +259,7 @@ module.exports = {
             }
             const { email, deviceType } = request.body;
             const data = await getUserInfo(email, 'deactivateUser');
-            let userId;
+            let userId, userType;
             if (data.length === 0) {
                 return response.status(statusCode.error).json({
                     statusCode: statusCode.error,
@@ -267,23 +267,26 @@ module.exports = {
                 });
             }
             userId = data[0]["id"];
+            userType = data[0]["_type"];
             await saveDeactivatedUser(userId);
-            // await db.query(sql`
-            //     DELETE FROM feeds WHERE created_by_id = ${data[0]["id"]};
-            //     DELETE FROM otp WHERE email = ${email};
-            // `);
-            // if (data[0]["_type"] === 'student') {
-            //     await db.query(sql`
-            //         DELETE FROM tutor_requests WHERE student_id = ${data[0]["id"]} ;
-            //         DELETE FROM students WHERE student_id = ${data[0]["id"]};
-            //         DELETE FROM users WHERE id = ${data[0]["id"]};
-            //     `);
-            // } else if (data[0]["_type"] === 'tutor') {
-            //     await db.query(sql`
-            //         DELETE FROM tutors WHERE tutor_id = ${data[0]["id"]};
-            //         DELETE FROM users WHERE id = ${data[0]["id"]};
-            //     `);
-            // }
+            await Promise.all([
+                deleteFeedsOfUser(userId),
+                deleteOTPInfo(email)
+            ]);
+            console.log(userType);
+            if (userType === 'student') {
+                await Promise.all([
+                    deleteRequestForStudent(userId),
+                    deleteStudentInfo(userId),
+                    deleteUser(userId)
+                ]);
+            } else if (userType === 'tutor') {
+                console.log('inside tutor block');
+                await Promise.all([
+                    deleteTutorInfo(userId),
+                    deleteUser(userId)
+                ]);
+            }
             return response.status(statusCode.success).json({
                 statusCode: statusCode.success,
                 message: user.deactivationSuccess
@@ -526,5 +529,119 @@ const saveDeactivatedUser = (userId) => {
                 resolve('success');
             }
         })
+    });
+}
+
+/**
+ * Deletes feeds upon user deactivation
+ * @param {number} userId 
+ * @returns null
+ */
+const deleteFeedsOfUser = (userId) => {
+    const sql = `DELETE FROM feeds WHERE created_by_id = ?`;
+    return new Promise((resolve, reject) => {
+        appDB.run(sql, [userId], (err) => {
+            if (err) {
+                reject('error at deleteFeedsOfUser method');
+                console.log(err);
+            } else {
+                resolve('success');
+            }
+        });
+    });
+}
+
+/**
+ * Deletes OTP info upon user deactivation
+ * @param {string} email 
+ * @returns null
+ */
+const deleteOTPInfo = (email) => {
+    const sql = `DELETE FROM otp WHERE email = ?`;
+    return new Promise((resolve, reject) => {
+        appDB.run(sql, [email], (err) => {
+            if (err) {
+                reject('error at deleteOTPInfo method');
+                console.log(err);
+            } else {
+                resolve('success');
+            }
+        });
+    });
+}
+
+/**
+ * Deletes requests by student upon user deactivation
+ * @param {number} userId 
+ * @returns null
+ */
+const deleteRequestForStudent = (userId) => {
+    const sql = `DELETE FROM tutor_requests WHERE student_id = ?`;
+    return new Promise((resolve, reject) => {
+        appDB.run(sql, [userId], (err) => {
+            if (err) {
+                reject('error at deleteRequestForStudent method');
+                console.log(err);
+            } else {
+                resolve('success');
+            }
+        });
+    });
+}
+
+/**
+ * Deletes student info upon user deactivation
+ * @param {number} userId 
+ * @returns null
+ */
+const deleteStudentInfo = (userId) => {
+    const sql = `DELETE FROM students WHERE student_id = ?`;
+    return new Promise((resolve, reject) => {
+        appDB.run(sql, [userId], (err) => {
+            if (err) {
+                reject('error at deleteStudentInfo method');
+                console.log(err);
+            } else {
+                resolve('success');
+            }
+        });
+    });
+}
+
+/**
+ * Deletes tutor info upon user deactivation
+ * @param {number} userId 
+ * @returns null
+ */
+const deleteTutorInfo = (userId) => {
+    const sql = `DELETE FROM tutors WHERE tutor_id = ?`;
+    return new Promise((resolve, reject) => {
+        appDB.run(sql, [userId], (err) => {
+            if (err) {
+                reject('error at deleteTutorInfo method');
+                console.log(err);
+            } else {
+                resolve('success');
+            }
+        });
+    });
+}
+
+/**
+ * Deletes user info upon user deactivation
+ * @param {number} userId 
+ * @returns null
+ */
+const deleteUser = (userId) => {
+    const sql = `DELETE FROM users WHERE id = ?`;
+    return new Promise((resolve, reject) => {
+        appDB.run(sql, [userId], (err) => {
+            if (err) {
+                reject('error at deleteUser method');
+                console.log(err);
+            } else {
+                resolve('success');
+            }
+        });
     });
 }
