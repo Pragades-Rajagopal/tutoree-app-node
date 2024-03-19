@@ -1,7 +1,8 @@
 'use strict'
 
-const { courses, statusCode } = require('../config/constants');
+const { courses, statusCode, commonServerError, databaseErrors } = require('../config/constants');
 const moment = require('moment');
+const { validationResult } = require('express-validator');
 const appDB = require('../connector/database');
 
 module.exports = {
@@ -13,6 +14,21 @@ module.exports = {
       */
     saveCourse: async (request, response) => {
         try {
+            const userType = request.user["_type"];
+            if (userType !== 'admin') {
+                return response.status(statusCode.forbidden).json({
+                    statusCode: statusCode.forbidden,
+                    message: courses.forbidden
+                })
+            }
+            const validationErrors = validationResult(request);
+            if (!validationErrors.isEmpty()) {
+                return response.status(statusCode.error).json({
+                    statusCode: statusCode.error,
+                    message: validationErrors.mapped(),
+                    error: commonServerError.badRequest,
+                });
+            }
             const course = request.body.course;
             await saveCourse(course);
             return response.status(statusCode.success).json({
@@ -21,9 +37,15 @@ module.exports = {
             });
         } catch (error) {
             console.error('Error while saving course');
-            console.error(error);
+            console.error(error.error);
+            if (error.error === databaseErrors.unique_constraint) {
+                return response.status(statusCode.error).json({
+                    statusCode: statusCode.error,
+                    message: courses.alreadyExists
+                });
+            }
             return response.status(statusCode.serverError).json({
-                statusCode: statusCode.error,
+                statusCode: statusCode.serverError,
                 message: courses.error
             });
         }
@@ -74,9 +96,13 @@ const saveCourse = (name) => {
     return new Promise((resolve, reject) => {
         appDB.run(sql, [name, currentTime, currentTime], (err) => {
             if (err) {
-                reject('error at saveCourse method');
+                const error = err.message.split(': ')[1];
+                reject({
+                    flag: false,
+                    error: error
+                });
             } else {
-                resolve('success');
+                resolve({ flag: true, error: null });
             }
         })
     });

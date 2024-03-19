@@ -102,10 +102,21 @@ module.exports = {
     },
     courses: {
         success: 'Success',
-        error: 'Something went wrong'
+        error: 'Something went wrong',
+        forbidden: 'You do not have access to this operation',
+        alreadyExists: 'Course already exists'
     },
     commonServerError: {
         internal: 'Internal Server Error',
         badRequest: 'Bad request'
+    },
+    databaseErrors: {
+        unique_constraint: 'UNIQUE constraint failed',
+        constraint: 'SQLITE_CONSTRAINT'
+    },
+    userTypes: {
+        admin: 'admin',
+        tutor: 'tutor',
+        student: 'student'
     }
 }

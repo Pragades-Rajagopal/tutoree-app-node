@@ -99,7 +99,7 @@ appDB.run(`
     0000000000,
     1,
     1,
-    'tutor',
+    'admin',
     1,
     DATETIME(),
     DATETIME());

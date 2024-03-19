@@ -28,7 +28,6 @@ module.exports = {
             })
         }
         jwt.verify(token, process.env.APP_ACCESS_TOKEN, { algorithms: "HS256" }, (err, data) => {
-            console.log(err);
             if (err) {
                 return res.status(statusCode.forbidden).json({
                     statusCode: statusCode.forbidden,

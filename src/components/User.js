@@ -5,7 +5,7 @@ const mailService = require('../services/mailService');
 const otpService = require('../services/otpService');
 const loginService = require('../services/loginService');
 const middleware = require('../services/middlewareService');
-const { statusCode, user, emailType, otpMessages, commonServerError } = require('../config/constants');
+const { statusCode, user, emailType, otpMessages, commonServerError, databaseErrors } = require('../config/constants');
 const appDB = require('../connector/database');
 const { validationResult } = require('express-validator');
 
@@ -339,7 +339,7 @@ const saveUser = (data) => {
             if (err) {
                 console.error('error while saving the user');
                 console.error(err.message);
-                const message = err.message.split(': ')[0] === 'SQLITE_CONSTRAINT'
+                const message = err.message.split(': ')[0] === databaseErrors.constraint
                     ? err.message.split('SQLITE_CONSTRAINT: ')[1]
                     : err.message.split(': ')[1]
                 const code = err.message.split(': ')[0]

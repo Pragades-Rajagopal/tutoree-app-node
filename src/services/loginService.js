@@ -35,7 +35,9 @@ module.exports = {
                 return statusCode.notFound;
             }
             const result = await bcrypt.compare(password, data[0].password);
-            console.log(loginService.verification.success);
+            if (result) {
+                console.log(loginService.verification.success);
+            }
             return result;
         } catch (error) {
             console.error(loginService.verification.error);
