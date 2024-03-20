@@ -3,6 +3,30 @@ const appDB = require('../connector/database');
 
 module.exports = {
     /**
+     * Checks if the user exists
+     * @param {number} userId 
+     * @param {number} userType 
+     * @returns null
+     */
+    checkUser: (userId, userType) => {
+        const sql = `
+            SELECT 1 "check" FROM users
+            WHERE id = ?
+            AND _type = ?
+            AND _status = 1
+        `;
+        return new Promise((resolve, reject) => {
+            appDB.all(sql, [userId, userType], (err, data) => {
+                if (err) {
+                    reject('error at checkUser method');
+                } else {
+                    resolve(data);
+                }
+            })
+        });
+    },
+
+    /**
      * Retrieves profile information of a student/tutor
      * @param {number} id 
      * @param {string} userType 

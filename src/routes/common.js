@@ -2,12 +2,14 @@ const Router = require('express').Router();
 // components
 const userComponent = require('../components/User');
 const studentComponent = require('../components/Student');
+const tutorComponent = require('../components/Tutor');
 const commonComponent = require('../components/Common');
 // services
 const { authenticateToken } = require('../services/middlewareService');
 // validations
 const userValidations = require('../validators/user');
 const studentValidations = require('../validators/student');
+const tutorValidations = require('../validators/tutor');
 const commonValidations = require('../validators/common');
 
 /**
@@ -28,6 +30,14 @@ Router.post('/student/interest', authenticateToken, studentValidations.addStuden
 Router.get('/student/interest/:id', authenticateToken, studentComponent.getStudentInterests);
 Router.get('/student/tutor-list/:student_id', authenticateToken, studentComponent.getTutorList);
 Router.post('/student/request', authenticateToken, studentValidations.sendTutorRequest, studentComponent.sendRequest);
+
+/**
+ * Tutor router
+ */
+Router.post('/tutor/profile', authenticateToken, tutorValidations.addTutorInterests, tutorComponent.saveTutorProfile);
+Router.get('/tutor/profile/:id', authenticateToken, tutorComponent.getTutorProfile);
+Router.get('/tutor/request/:id', authenticateToken, tutorComponent.getRequestInfo);
+Router.post('/tutor/request-hide', authenticateToken, tutorValidations.hideTutorRequest, tutorComponent.hideRequest);
 
 /**
  * Common router
