@@ -1,6 +1,6 @@
 const moment = require('moment');
 const { validationResult } = require('express-validator');
-const { student, statusCode, courses, commonServerError, userTypes } = require('../config/constants');
+const { student, statusCode, commonServerError, userTypes } = require('../config/constants');
 const mailService = require('../services/mailService');
 const dataService = require('../services/dataService');
 const appDB = require('../connector/database');
@@ -21,7 +21,7 @@ module.exports = {
                 });
             }
             const { studentId, courseIds } = request.body;
-            const isStudent = await checkStudent(studentId);
+            const isStudent = await dataService.checkUser(studentId, userTypes.student);
             console.log(isStudent);
             if (isStudent && isStudent.length === 0) {
                 return response.status(statusCode.error).json({
@@ -191,29 +191,6 @@ module.exports = {
 /**
  * Models
  */
-
-/**
- * Checks if the student exists
- * @param {number} studentId 
- * @returns null
- */
-const checkStudent = (studentId) => {
-    const sql = `
-        SELECT 1 "check" FROM users
-        WHERE id = ?
-        AND _type = 'student'
-        AND _status = 1
-    `;
-    return new Promise((resolve, reject) => {
-        appDB.all(sql, [studentId], (err, data) => {
-            if (err) {
-                reject('error at checkStudent method');
-            } else {
-                resolve(data);
-            }
-        })
-    });
-}
 
 /**
  * Deletes all student info
