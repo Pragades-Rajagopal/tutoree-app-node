@@ -14,7 +14,6 @@ exports.addTutorInterests = [
         .isEmpty()
         .withMessage('courseIds is mandatory')
         .isArray()
-        .isLength({ min: 1 })
         .withMessage('courseIds should be an array')
 ];
 

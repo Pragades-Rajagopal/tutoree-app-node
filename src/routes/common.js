@@ -4,6 +4,7 @@ const userComponent = require('../components/User');
 const studentComponent = require('../components/Student');
 const tutorComponent = require('../components/Tutor');
 const commonComponent = require('../components/Common');
+const feedComponent = require('../components/Feeds');
 // services
 const { authenticateToken } = require('../services/middlewareService');
 // validations
@@ -11,6 +12,7 @@ const userValidations = require('../validators/user');
 const studentValidations = require('../validators/student');
 const tutorValidations = require('../validators/tutor');
 const commonValidations = require('../validators/common');
+const { saveFeedValidation } = require('../validators/feeds');
 
 /**
  * User router
@@ -44,5 +46,13 @@ Router.post('/tutor/request-hide', authenticateToken, tutorValidations.hideTutor
  */
 Router.get('/all-courses', commonComponent.getAllCourses);
 Router.post('/course', authenticateToken, commonValidations.postCourse, commonComponent.saveCourse);
+
+/**
+ * Feed router
+ */
+Router.post('/feed', authenticateToken, saveFeedValidation, feedComponent.saveFeed);
+Router.get('/feed', authenticateToken, feedComponent.getFeeds);
+Router.delete('/feed/:id', authenticateToken, feedComponent.deleteFeed);
+Router.get('/feed-user/:userid', authenticateToken, feedComponent.getFeedUserData);
 
 module.exports = Router;
