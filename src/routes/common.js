@@ -55,4 +55,9 @@ Router.get('/feed', authenticateToken, feedComponent.getFeeds);
 Router.delete('/feed/:id', authenticateToken, feedComponent.deleteFeed);
 Router.get('/feed-user/:userid', authenticateToken, feedComponent.getFeedUserData);
 
+/**
+ * Internal routes
+ */
+Router.get('/internal/get-users/:type', authenticateToken, userComponent.getAllUsers);
+
 module.exports = Router;

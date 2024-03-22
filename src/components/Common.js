@@ -1,6 +1,6 @@
 'use strict'
 
-const { courses, statusCode, commonServerError, databaseErrors } = require('../config/constants');
+const { courses, statusCode, commonServerError, databaseErrors, userTypes } = require('../config/constants');
 const moment = require('moment');
 const { validationResult } = require('express-validator');
 const appDB = require('../connector/database');
@@ -15,7 +15,7 @@ module.exports = {
     saveCourse: async (request, response) => {
         try {
             const userType = request.user["_type"];
-            if (userType !== 'admin') {
+            if (userType !== userTypes.admin) {
                 return response.status(statusCode.forbidden).json({
                     statusCode: statusCode.forbidden,
                     message: courses.forbidden

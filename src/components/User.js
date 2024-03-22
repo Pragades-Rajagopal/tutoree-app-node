@@ -5,7 +5,7 @@ const mailService = require('../services/mailService');
 const otpService = require('../services/otpService');
 const loginService = require('../services/loginService');
 const middleware = require('../services/middlewareService');
-const { statusCode, user, emailType, otpMessages, commonServerError, databaseErrors } = require('../config/constants');
+const { statusCode, user, emailType, otpMessages, commonServerError, databaseErrors, userTypes } = require('../config/constants');
 const appDB = require('../connector/database');
 const { validationResult } = require('express-validator');
 
@@ -265,7 +265,6 @@ module.exports = {
                 deleteFeedsOfUser(userId),
                 deleteOTPInfo(email)
             ]);
-            console.log(userType);
             if (userType === 'student') {
                 await Promise.all([
                     deleteRequestForStudent(userId),
@@ -289,6 +288,41 @@ module.exports = {
             return response.status(statusCode.serverError).json({
                 statusCode: statusCode.serverError,
                 message: user.deactivationError
+            });
+        }
+    },
+
+    /**
+     * Gets all active/inactive users from the system
+     * 
+     * Internal function - Requires admin privilege
+     * @param {*} request 
+     * @param {*} response 
+     * @returns response
+     */
+    getAllUsers: async (request, response) => {
+        try {
+            const userType = request.user["_type"];
+            if (userType !== userTypes.admin) {
+                return response.status(statusCode.forbidden).json({
+                    statusCode: statusCode.forbidden,
+                    message: courses.forbidden
+                })
+            }
+            const { limit, offset } = request.query;
+            const type = request.params.type;
+            const data = await getUsersModel(type, limit, offset);
+            const count = data?.length;
+            return response.status(200).json({
+                statusCode: statusCode.success,
+                count: count,
+                data: data
+            })
+        } catch (error) {
+            console.error(error);
+            return response.status(statusCode.serverError).json({
+                statusCode: statusCode.serverError,
+                message: error
             });
         }
     }
@@ -635,5 +669,58 @@ const deleteUser = (userId) => {
                 resolve('success');
             }
         });
+    });
+}
+
+/**
+ * Get active/deactivated users
+ * 
+ * Internal use only
+ * @param {string} type 
+ * @param {number} limit 
+ * @param {number} offset 
+ * @returns data
+ */
+const getUsersModel = (type, limit, offset) => {
+    var sql = type === 'active'
+        ? `
+            SELECT
+            id,
+            first_name || ' ' || last_name as name,
+            email,
+            mobile_no,
+            _type,
+            is_email_verified,
+            is_mobile_verified,
+            _status,
+            _created_on,
+            _modified_on             
+            FROM users 
+        `
+        : `
+            SELECT
+            uid,
+            first_name || ' ' || last_name as name,
+            email,
+            mobile_no,
+            _type,
+            is_email_verified,
+            is_mobile_verified,
+            _status,
+            deactivated_on,
+            usage_days
+            FROM deactivated_users 
+        `;
+    if (limit) { sql = sql + `LIMIT ${limit}` }
+    if (offset) { sql = sql + ` OFFSET ${offset}` }
+    return new Promise((resolve, reject) => {
+        appDB.all(sql, [], (err, data) => {
+            if (err) {
+                console.log(err);
+                reject('error at getAllUsersModel');
+            } else {
+                resolve(data)
+            }
+        })
     });
 }
