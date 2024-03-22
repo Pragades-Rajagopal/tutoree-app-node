@@ -22,7 +22,6 @@ module.exports = {
             }
             const { studentId, courseIds } = request.body;
             const isStudent = await dataService.checkUser(studentId, userTypes.student);
-            console.log(isStudent);
             if (isStudent && isStudent.length === 0) {
                 return response.status(statusCode.error).json({
                     statusCode: statusCode.error,

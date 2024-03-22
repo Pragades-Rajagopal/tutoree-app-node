@@ -29,15 +29,7 @@ module.exports = {
             const currentTime = moment().utcOffset('+05:30').format('YYYY-MM-DD HH:mm:ss');
             const body = request.body;
             body.password = await loginService.hashPass(body.password);
-            const result = await saveUser(body);
-            if (!result.flag) {
-                return response.status(statusCode.serverError).json({
-                    statusCode: statusCode.serverError,
-                    message: error.error,
-                    error: commonServerError.internal,
-                    code: error.code
-                });
-            }
+            await saveUser(body);
             const otp = await otpService.generateOTP(body.email, currentTime);
             mailService.sendRegistrationOTPEmail(body.email, otp, emailType.register);
             return response.status(statusCode.success).json({
@@ -257,7 +249,7 @@ module.exports = {
                     error: commonServerError.badRequest,
                 });
             }
-            const { email, deviceType } = request.body;
+            const { email } = request.body;
             const data = await getUserInfo(email, 'deactivateUser');
             let userId, userType;
             if (data.length === 0) {
