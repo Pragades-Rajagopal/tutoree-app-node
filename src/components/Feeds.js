@@ -126,6 +126,29 @@ module.exports = {
                 data: {}
             });
         }
+    },
+
+    /**
+     * Updates feed upvote
+     * @param {*} request 
+     * @param {*} response 
+     * @returns reponse
+     */
+    updateUpvote: async (request, response) => {
+        try {
+            const id = request.params.id;
+            await updateUpvoteModel(id);
+            return response.status(statusCode.success).json({
+                statusCode: statusCode.success,
+                message: feeds.success
+            })
+        } catch (error) {
+            console.error(error);
+            return response.status(statusCode.serverError).json({
+                statusCode: statusCode.serverError,
+                message: feeds.updateError,
+            });
+        }
     }
 }
 
@@ -306,6 +329,28 @@ const getFeedUserInfo = async (id, userType) => {
                 reject('error at getFeedUserInfo method');
             } else {
                 resolve(data);
+            }
+        })
+    });
+}
+
+/**
+ * Updates upvotes for the feed id
+ * @param {number} id feed id 
+ * @returns null
+ */
+const updateUpvoteModel = (id) => {
+    const sql = `
+        UPDATE feeds 
+        SET upvotes = upvotes + 1
+        WHERE id = ?
+    `;
+    return new Promise((resolve, reject) => {
+        appDB.run(sql, [id], (err) => {
+            if (err) {
+                reject('error at updateUpvoteModel');
+            } else {
+                resolve('success');
             }
         })
     });

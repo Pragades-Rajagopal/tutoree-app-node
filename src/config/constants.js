@@ -98,7 +98,8 @@ module.exports = {
         deleteFeedError: 'Error while deleting feed',
         userNotFound: 'User not found',
         success: 'success',
-        error: 'Unable to fetch feed user data'
+        error: 'Unable to fetch feed user data',
+        updateError: 'Error while updating upvotes'
     },
     courses: {
         success: 'Success',

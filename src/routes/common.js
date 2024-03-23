@@ -54,6 +54,7 @@ Router.post('/feed', authenticateToken, saveFeedValidation, feedComponent.saveFe
 Router.get('/feed', authenticateToken, feedComponent.getFeeds);
 Router.delete('/feed/:id', authenticateToken, feedComponent.deleteFeed);
 Router.get('/feed-user/:userid', authenticateToken, feedComponent.getFeedUserData);
+Router.put('/feed/:id/upvote', authenticateToken, feedComponent.updateUpvote);
 
 /**
  * Internal routes
