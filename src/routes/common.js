@@ -5,6 +5,7 @@ const studentComponent = require('../components/Student');
 const tutorComponent = require('../components/Tutor');
 const commonComponent = require('../components/Common');
 const feedComponent = require('../components/Feeds');
+const MigrationComponent = require('../components/Migration');
 // services
 const { authenticateToken } = require('../services/middlewareService');
 // validations
@@ -13,6 +14,7 @@ const studentValidations = require('../validators/student');
 const tutorValidations = require('../validators/tutor');
 const commonValidations = require('../validators/common');
 const { saveFeedValidation } = require('../validators/feeds');
+
 
 /**
  * User router
@@ -60,5 +62,7 @@ Router.put('/feed/:id/upvote', authenticateToken, feedComponent.updateUpvote);
  * Internal routes
  */
 Router.get('/internal/get-users/:type', authenticateToken, userComponent.getAllUsers);
+// Migration
+Router.post('/internal/migrate', authenticateToken, MigrationComponent.runMigration);
 
 module.exports = Router;
