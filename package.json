@@ -7,6 +7,7 @@
     "linter": "eslint src",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "db-config": "node node_modules/db-migrate/bin/db-migrate up --config database.json -e app",
     "migrate-up": "node node_modules/db-migrate/bin/db-migrate up -e app",
     "migrate-reset": "node node_modules/db-migrate/bin/db-migrate reset -e app",
     "db-seed": "node migrations/seeds/001.js"

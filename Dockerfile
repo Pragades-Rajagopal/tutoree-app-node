@@ -5,9 +5,14 @@ COPY package.json /app/tutoree/
 RUN npm install
 
 COPY . /app/tutoree/
-# COPY .env /app/tutoree/
+COPY .env /app/tutoree/
 
-# RUN npm run migrate
-# RUN npm run seed
+RUN touch /app/tutoree/db.sqlite
+
+COPY database.json /app/tutoree/
+RUN npm run db-config
+
+RUN npm run migrate-up
+RUN npm run db-seed
 
 CMD ["npm", "start"]
