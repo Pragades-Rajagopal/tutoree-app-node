@@ -1,3 +1,7 @@
+FROM ubuntu
+RUN useradd -u 1234 app-user
+USER app-user
+
 FROM node:18-buster-slim
 
 COPY package.json .
