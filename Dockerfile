@@ -8,6 +8,7 @@ COPY . /app/tutoree/
 COPY .env /app/tutoree/
 
 RUN touch /app/tutoree/db.sqlite
+RUN chmod +x /app/tutoree/db.sqlite
 
 COPY database.json /app/tutoree/
 RUN npm run db-config
