@@ -1,5 +1,5 @@
 FROM ubuntu
-RUN useradd -u 10001 appuser
+RUN adduser -u 10014 appuser
 USER appuser
 
 FROM node:18-buster-slim
