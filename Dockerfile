@@ -1,6 +1,6 @@
 FROM ubuntu
-RUN useradd -u 1234 app-user
-USER app-user
+RUN useradd -u 10001 appuser
+USER appuser
 
 FROM node:18-buster-slim
 
