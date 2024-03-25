@@ -1,16 +1,15 @@
 FROM node:18-buster-slim
-WORKDIR /app/tutoree/
 
-COPY package.json /app/tutoree/
+COPY package.json .
 RUN npm install
 
-COPY . /app/tutoree/
-COPY .env /app/tutoree/
+COPY . .
+COPY .env .
 
-RUN touch /app/tutoree/db.sqlite
-RUN chmod +x /app/tutoree/db.sqlite
+RUN touch db.sqlite
+RUN chmod +x db.sqlite
 
-COPY database.json /app/tutoree/
+COPY database.json .
 RUN npm run db-config
 
 RUN npm run migrate-up
