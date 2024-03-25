@@ -6,7 +6,7 @@ console.log(__dirname);
 const appDB = new sqlite.Database(dbPath, sqlite.OPEN_READWRITE, (err) => {
     console.log('db path:', dbPath);
     if (err) {
-        console.log('connection error : ', err.message);
+        console.log('connection error : ', err);
     } else {
         console.log('DB connected');
     }
