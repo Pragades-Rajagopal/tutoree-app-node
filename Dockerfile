@@ -8,7 +8,7 @@ COPY package.json .
 RUN npm install
 
 COPY . .
-COPY app.env .
+COPY ./app.env .
 
 RUN touch db.sqlite
 RUN chmod +x db.sqlite
