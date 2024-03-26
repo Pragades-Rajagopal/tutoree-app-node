@@ -1,6 +1,6 @@
 FROM ubuntu
 RUN adduser -u 10014 appuser
-USER appuser
+USER 10014
 
 FROM node:18-buster-slim
 
