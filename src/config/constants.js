@@ -104,12 +104,12 @@ module.exports = {
     courses: {
         success: 'Success',
         error: 'Something went wrong',
-        forbidden: 'You do not have access to this operation',
         alreadyExists: 'Course already exists'
     },
     commonServerError: {
         internal: 'Internal Server Error',
-        badRequest: 'Bad request'
+        badRequest: 'Bad request',
+        forbidden: 'You do not have access to this operation',
     },
     databaseErrors: {
         unique_constraint: 'UNIQUE constraint failed',

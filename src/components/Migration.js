@@ -1,14 +1,22 @@
 const appDB = require('../connector/database');
-const { statusCode, userTypes } = require('../config/constants');
+const { statusCode, userTypes, commonServerError } = require('../config/constants');
 
 module.exports = {
+    /**
+     * Migration component to perform migration through API
+     * 
+     * Internal function - Requires admin privilege
+     * @param {*} request 
+     * @param {*} response 
+     * @returns response
+     */
     runMigration: async (request, response) => {
         try {
             const userType = request.user["_type"];
             if (userType !== userTypes.admin) {
                 return response.status(statusCode.forbidden).json({
                     statusCode: statusCode.forbidden,
-                    message: courses.forbidden
+                    message: commonServerError.forbidden
                 })
             }
             const { query } = request.body;
@@ -37,7 +45,11 @@ module.exports = {
  * Models
  */
 
-
+/**
+ * Migration model
+ * @param {string} query 
+ * @returns null
+ */
 const migrationModel = (query) => {
     return new Promise((resolve, reject) => {
         appDB.run(query, [], (err) => {

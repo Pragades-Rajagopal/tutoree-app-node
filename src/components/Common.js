@@ -18,7 +18,7 @@ module.exports = {
             if (userType !== userTypes.admin) {
                 return response.status(statusCode.forbidden).json({
                     statusCode: statusCode.forbidden,
-                    message: courses.forbidden
+                    message: commonServerError.forbidden
                 })
             }
             const validationErrors = validationResult(request);
