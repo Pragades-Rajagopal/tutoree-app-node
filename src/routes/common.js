@@ -6,6 +6,7 @@ const tutorComponent = require('../components/Tutor');
 const commonComponent = require('../components/Common');
 const feedComponent = require('../components/Feeds');
 const MigrationComponent = require('../components/Migration');
+const searchComponent = require('../components/Search');
 // services
 const { authenticateToken } = require('../services/middlewareService');
 // validations
@@ -57,6 +58,11 @@ Router.get('/feed', authenticateToken, feedComponent.getFeeds);
 Router.delete('/feed/:id', authenticateToken, feedComponent.deleteFeed);
 Router.get('/feed-user/:userid', authenticateToken, feedComponent.getFeedUserData);
 Router.put('/feed/:id/upvote', authenticateToken, feedComponent.updateUpvote);
+
+/**
+ * Search router
+ */
+Router.get('/search', authenticateToken, searchComponent.globalSearch);
 
 /**
  * Internal routes
