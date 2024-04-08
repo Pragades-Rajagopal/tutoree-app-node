@@ -120,7 +120,7 @@ module.exports = {
             return response.status(statusCode.serverError).json({
                 statusCode: statusCode.serverError,
                 message: null,
-                error: error
+                error: error.message
             });
         }
     },

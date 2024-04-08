@@ -7,6 +7,7 @@ const commonComponent = require('../components/Common');
 const feedComponent = require('../components/Feeds');
 const MigrationComponent = require('../components/Migration');
 const searchComponent = require('../components/Search');
+const policyComponent = require('../components/Policy');
 // services
 const { authenticateToken } = require('../services/middlewareService');
 // validations
@@ -15,6 +16,7 @@ const studentValidations = require('../validators/student');
 const tutorValidations = require('../validators/tutor');
 const commonValidations = require('../validators/common');
 const { saveFeedValidation } = require('../validators/feeds');
+const { addPolicy } = require('../validators/policy');
 
 
 /**
@@ -70,5 +72,11 @@ Router.get('/search', authenticateToken, searchComponent.globalSearch);
 Router.get('/internal/get-users/:type', authenticateToken, userComponent.getAllUsers);
 // Migration
 Router.post('/internal/migrate', authenticateToken, MigrationComponent.runMigration);
+
+/**
+ * Policy routes
+ */
+Router.post('/internal/policy', authenticateToken, addPolicy, policyComponent.savePolicy);
+Router.get('/internal/policy', policyComponent.getPolicies);
 
 module.exports = Router;

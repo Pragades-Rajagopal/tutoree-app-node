@@ -119,5 +119,10 @@ module.exports = {
         admin: 'admin',
         tutor: 'tutor',
         student: 'student'
+    },
+    policies: {
+        saveError: 'Error while saving policy',
+        saveSuccess: 'Save success',
+        error: 'Something went wrong'
     }
 }

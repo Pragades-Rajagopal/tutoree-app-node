@@ -29,3 +29,5 @@ tags
 .clinic/
 
 seq.drawio
+
+*.http
