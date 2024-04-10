@@ -69,6 +69,30 @@ module.exports = {
                 message: policies.error
             });
         }
+    },
+
+    /**
+     * Delete a policy
+     * @param {*} request 
+     * @param {*} response 
+     * @returns {object} response
+     */
+    deletePolicy: async (request, response) => {
+        try {
+            const id = request.params.id;
+            await deletePolicyData(id);
+            return response.status(statusCode.success).json({
+                statusCode: statusCode.success,
+                message: policies.deletePolicy,
+            });
+        } catch (error) {
+            console.error(policies.deletePolicyError);
+            console.error(error);
+            return response.status(statusCode.serverError).json({
+                statusCode: statusCode.serverError,
+                message: policies.deletePolicyError,
+            });
+        }
     }
 }
 
@@ -91,7 +115,6 @@ const savePolicyData = (data) => {
         appDB.run(sql, [data.title, data.content, data.createdBy, currentTime], (err) => {
             if (err) {
                 reject(err.message);
-                console.log(err);
             } else {
                 resolve('success');
             }
@@ -111,6 +134,24 @@ const getPolicyData = () => {
                 reject("error at getPolicyData method");
             } else {
                 resolve(data);
+            }
+        })
+    });
+}
+
+/**
+ * Delete a policy
+ * @param {number} id 
+ * @returns null
+ */
+const deletePolicyData = (id) => {
+    const sql = `DELETE FROM policies WHERE id = ?`;
+    return new Promise((resolve, reject) => {
+        appDB.run(sql, [id], (err) => {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve('success');
             }
         })
     });

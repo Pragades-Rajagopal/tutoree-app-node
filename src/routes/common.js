@@ -78,5 +78,6 @@ Router.post('/internal/migrate', authenticateToken, MigrationComponent.runMigrat
  */
 Router.post('/internal/policy', authenticateToken, addPolicy, policyComponent.savePolicy);
 Router.get('/internal/policy', policyComponent.getPolicies);
+Router.delete('/internal/policy/:id', authenticateToken, policyComponent.deletePolicy);
 
 module.exports = Router;

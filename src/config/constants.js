@@ -123,6 +123,8 @@ module.exports = {
     policies: {
         saveError: 'Error while saving policy',
         saveSuccess: 'Save success',
-        error: 'Something went wrong'
+        error: 'Something went wrong',
+        deletePolicy: 'Policy deleted successfully',
+        deletePolicyError: 'Error while deleting policy',
     }
 }
