@@ -1,7 +1,7 @@
 'use strict'
 const path = require('path');
 require('dotenv').config({
-    path: path.resolve('./app.env'),
+    path: path.resolve('./.env'),
 });
 const appDB = require('../../src/connector/database');
 

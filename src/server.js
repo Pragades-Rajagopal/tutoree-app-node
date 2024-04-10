@@ -1,6 +1,6 @@
 const path = require('path');
 require('dotenv').config({
-    path: path.resolve(__dirname, '../app.env')
+    path: path.resolve(__dirname, '../.env')
 });
 const express = require('express');
 const router = require('./routes/common');
