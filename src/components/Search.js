@@ -44,7 +44,9 @@ const searchModel = (value) => {
             'tutor' as tbl_nm,
             name as field1,
             email as field2,
-            interests as field3
+            REPLACE(interests,
+            ', ',
+            '\n') as field3
         from
             tutor_info_vw
         where
@@ -56,7 +58,9 @@ const searchModel = (value) => {
             'student' as tbl_nm,
             name as field1,
             email as field2,
-            interests as field3
+            REPLACE(interests,
+            ', ',
+            '\n') as field3
         from
             student_info_vw
         where
@@ -65,10 +69,11 @@ const searchModel = (value) => {
             or interests like ${value}
         UNION 
         SELECT
-            'feeds' as tbl_nm,
+            'feed' as tbl_nm,
             content as field1,
             created_by as field2,
-            '' as field3
+            STRFTIME('%d', created_on) || ' ' || SUBSTR('JanFebMarAprMayJunJulAugSepOctNovDec',
+                        1 + 3 * STRFTIME('%m', created_on), -3) as field3
         from
             feeds
         WHERE
