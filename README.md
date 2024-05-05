@@ -29,6 +29,3 @@ Run the API with:
 ```bash
 npm start
 ```
-
-## Links
-- 📔 Swagger documentation > http://localhost:8080/api-docs/
